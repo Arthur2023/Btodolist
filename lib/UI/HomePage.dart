@@ -17,55 +17,29 @@ class Tasks {
   Tasks.test(this.title) {
     toDo = [];
   }
+  Tasks(this.title, this.toDo);
 }
 
 class _HomePageState extends State<HomePage> {
+
+
   final taskcontroller = TextEditingController();
 
-  List<Tasks> taskList = [Tasks.test("limpar"), Tasks.test("Estudar")];
+  Tasks t1 = Tasks("fazer", ["a", "b"]);
 
-  @override
-  void initState() {
-    super.initState();
-    _readData().then((data) {
-      setState(() {
-        taskList = json.decode(data);
-      });
-    });
-  }
+  List<Tasks> taskList = [Tasks.test("limpar"), Tasks.test("Estudar"),];
 
   void _addToDo() {
     setState(() {
       taskcontroller.text = '';
       taskList.add(Tasks.test(taskcontroller.text));
-      _saveData();
     });
   }
 
-  Future<File> _getFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    return File("${directory.path}data.json");
-  }
-
-  Future<String> _readData() async {
-    try {
-      final file = await _getFile();
-      return file.readAsString();
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<File> _saveData() async {
-    String data = json.encode(taskList);
-    final file = await _getFile();
-    return file.writeAsString(data);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -74,59 +48,80 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-          padding: EdgeInsets.all(6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Row(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/montain.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: "Nova lista",
-                        labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 10),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  RaisedButton(
-                      child: Text("Adicionar"),
-                      color: Colors.white,
-                      onPressed: () {
-                      }),
-                ],
-              ),
-              for (final task in taskList)
-                Card(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TaskPage(
-                            task: task,
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: "Nova lista",
+                            labelStyle:
+                                TextStyle(color: Colors.black, fontSize: 10),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
                           ),
                         ),
-                      );
-                    },
-                    onLongPress: () {},
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                      child: Text(
-                        task.title,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      RaisedButton(
+                          child: Text("Adicionar"),
+                          color: Colors.white,
+                          onPressed: () {}),
+                    ],
+                  ),
+                  for (final task in taskList)
+                    Card(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TaskPage(
+                                task: task,
+                              ),
+                            ),
+                          );
+                        },
+                        onLongPress: () {},
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,                            children: <Widget>[
+                              Text(
+                                task.title,
+                              ),
+                              CircularProgressIndicator(
+                                backgroundColor: Colors.grey,
+                                strokeWidth: 1,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-            ],
-          )),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -11,13 +11,10 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
-
   final doController = TextEditingController();
 
-  void addDo(){
-setState(() {
-
-});
+  void addDo() {
+    setState(() {});
   }
 
   Widget buildItem(BuildContext context, int index) {
@@ -59,41 +56,54 @@ setState(() {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: "Nova tarefa",
-                      labelStyle: TextStyle(color: Colors.black, fontSize: 10),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/montain.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: "Nova tarefa",
+                        labelStyle:
+                            TextStyle(color: Colors.black, fontSize: 10),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                      ),
                     ),
                   ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  RaisedButton(
+                    child: Text("Adicionar"),
+                    color: Colors.white,
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              Expanded(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(top: 7),
+                    itemCount: widget.task.toDo.length,
+                    itemBuilder: buildItem),
+              ),
+              for (final String in widget.task.toDo)
+                Card(
+                  child: InkWell(),
                 ),
-                SizedBox(
-                  width: 5,
-                ),
-                RaisedButton(
-                  child: Text("Adicionar"),
-                  color: Colors.white,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                  padding: EdgeInsets.only(top: 7),
-                  itemCount: widget.task.toDo.length,
-                  itemBuilder: buildItem),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
