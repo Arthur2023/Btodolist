@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:b_to_do/UI/HomePage.dart';
-import "package:b_to_do/UI/taskView.dart";
 
 void main() {
   runApp(

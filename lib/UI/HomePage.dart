@@ -1,6 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
+import 'package:b_to_do/Service/DBHelper.dart';
+import 'package:b_to_do/class/Tasks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:b_to_do/UI/taskView.dart';
@@ -10,32 +9,19 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class Tasks {
-  String title;
-  List<String> toDo;
-
-  Tasks.test(this.title) {
-    toDo = [];
-  }
-  Tasks(this.title, this.toDo);
-}
-
 class _HomePageState extends State<HomePage> {
+  final taskController = TextEditingController();
 
+  List<Tasks> taskList = [];
 
-  final taskcontroller = TextEditingController();
-
-  Tasks t1 = Tasks("fazer", ["a", "b"]);
-
-  List<Tasks> taskList = [Tasks.test("limpar"), Tasks.test("Estudar"),];
-
-  void _addToDo() {
+  Future<void> _addToDo() async {
+    Tasks task1 = Tasks.test(taskController.text);
+    task1 = await DBHelper().saveTasks(task1);
     setState(() {
-      taskcontroller.text = '';
-      taskList.add(Tasks.test(taskcontroller.text));
+      taskList.add(task1);
+      taskController.text = '';
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +41,7 @@ class _HomePageState extends State<HomePage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: ListView(
           children: [
             Padding(
               padding: EdgeInsets.all(6),
@@ -67,10 +52,11 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       Expanded(
                         child: TextField(
+                          controller: taskController,
                           decoration: InputDecoration(
                             labelText: "Nova lista",
                             labelStyle:
-                                TextStyle(color: Colors.black, fontSize: 10),
+                                TextStyle(color: Colors.black, fontSize: 15),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
                           ),
@@ -82,7 +68,10 @@ class _HomePageState extends State<HomePage> {
                       RaisedButton(
                           child: Text("Adicionar"),
                           color: Colors.white,
-                          onPressed: () {}),
+                          onPressed: () {
+                            _addToDo();
+                            taskController.text = "";
+                          }),
                     ],
                   ),
                   for (final task in taskList)
@@ -98,18 +87,28 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         },
-                        onLongPress: () {},
+                        onLongPress: () {
+                          showAlertDialog1(context, task);
+                        },
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,                            children: <Widget>[
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
                               Text(
                                 task.title,
                               ),
-                              CircularProgressIndicator(
+                              task.checkItems == task.toDo.length
+                                  ? Icon(Icons.check)
+                                  : CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.black),
+                                value: task.toDo.length == 0
+                                    ? 0
+                                    : task.checkItems / task.toDo.length,
                                 backgroundColor: Colors.grey,
-                                strokeWidth: 1,
+                                strokeWidth: 2,
                               ),
                             ],
                           ),
@@ -122,6 +121,53 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    DBHelper().getAllTasks().then((value) {
+      taskList = value;
+      taskList.forEach((element) async {
+        element.toDo = await DBHelper().getAllToDoItensFromTasks(element.id);
+      });
+    });
+  }
+
+  showAlertDialog1(BuildContext context, Tasks tasks) {
+    Widget okButton = FlatButton(
+      color: Colors.grey[350],
+      height: 27,
+      child: Text("Confirmar"),
+      onPressed: () async {
+        await DBHelper().deleteTasks(tasks.id);
+        setState(() {
+          taskList.remove(tasks);
+        });
+        Navigator.pop(context);
+      },
+    );
+    Widget cancelButton = FlatButton(
+      color: Colors.grey[350],
+      height: 27,
+      child: Text("Cancelar"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    AlertDialog alerta = AlertDialog(
+      title: Text("Deseja excluir esta lista?"),
+      actions: [
+        okButton,
+        cancelButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
     );
   }
 }

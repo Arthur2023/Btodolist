@@ -1,5 +1,7 @@
+import 'package:b_to_do/Service/DBHelper.dart';
+import 'package:b_to_do/class/Tasks.dart';
+import 'package:b_to_do/class/ToDoItem.dart';
 import 'package:flutter/material.dart';
-import 'package:b_to_do/UI/HomePage.dart';
 
 class TaskPage extends StatefulWidget {
   final Tasks task;
@@ -13,34 +15,51 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   final doController = TextEditingController();
 
-  void addDo() {
-    setState(() {});
+  Future<void> addDo() async {
+    ToDoItem value = ToDoItem(title: doController.text);
+    value = await DBHelper().saveToDoItens(value, widget.task.id);
+    setState(() {
+      widget.task.toDo.add(value);
+    });
   }
 
   Widget buildItem(BuildContext context, int index) {
     return Dismissible(
+      onDismissed: (a) async {
+        await DBHelper().deleteToDoItens(widget.task.toDo[index].toDoid);
+      },
       key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
       background: Container(
-        color: Colors.grey,
+        color: Colors.grey[350],
         child: Align(
           alignment: Alignment(-0.9, 0.0),
-          child: Icon(Icons.delete, color: Colors.black),
+          child: Icon(Icons.delete, color: Colors.white),
         ),
       ),
       direction: DismissDirection.startToEnd,
-      child: CheckboxListTile(
-        title: Text(widget.task.toDo[index]),
-        value: true,
-        secondary: CircleAvatar(
+      child: Card(
+        child: CheckboxListTile(
+          activeColor: Colors.grey,
+          checkColor: Colors.white,
+          title: Text(
+            widget.task.toDo[index].title,
+            style: TextStyle(color: Colors.black),
+          ),
+          value: widget.task.toDo[index].state,
+          secondary: CircleAvatar(
             child: Icon(
-          true ? Icons.check : Icons.error,
-          color: Colors.grey[700],
-        )),
-        onChanged: (c) {
-          setState(() {
-            c = c;
-          });
-        },
+              widget.task.toDo[index].state ? Icons.check : Icons.error,
+              color: Colors.grey,
+            ),
+          ),
+          onChanged: (c) async {
+            setState(() {
+              widget.task.toDo[index].state = c;
+            });
+            await DBHelper()
+                .updateToDoItens(widget.task.toDo[index], widget.task.id);
+          },
+        ),
       ),
     );
   }
@@ -72,10 +91,11 @@ class _TaskPageState extends State<TaskPage> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: doController,
                       decoration: InputDecoration(
                         labelText: "Nova tarefa",
                         labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 10),
+                            TextStyle(color: Colors.black, fontSize: 15),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black)),
                       ),
@@ -87,7 +107,10 @@ class _TaskPageState extends State<TaskPage> {
                   RaisedButton(
                     child: Text("Adicionar"),
                     color: Colors.white,
-                    onPressed: () {},
+                    onPressed: () {
+                      addDo();
+                      doController.text = "";
+                    },
                   ),
                 ],
               ),
@@ -98,10 +121,6 @@ class _TaskPageState extends State<TaskPage> {
                     itemCount: widget.task.toDo.length,
                     itemBuilder: buildItem),
               ),
-              for (final String in widget.task.toDo)
-                Card(
-                  child: InkWell(),
-                ),
             ],
           ),
         ),
