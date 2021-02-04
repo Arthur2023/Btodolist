@@ -13,6 +13,9 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
+
+  final  GlobalKey < ScaffoldState > _scaffoldKey =  new  GlobalKey < ScaffoldState > ();
+
   final doController = TextEditingController();
 
   Future<void> addDo() async {
@@ -67,6 +70,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key:_scaffoldKey,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
@@ -108,6 +112,15 @@ class _TaskPageState extends State<TaskPage> {
                     child: Text("Adicionar"),
                     color: Colors.white,
                     onPressed: () {
+                      if( doController.text.trim() == ""){
+                        final snack = SnackBar(
+                          content: Text("Sua tarefa precisa de um nome!"),
+                          backgroundColor: Colors.grey,
+                          duration: Duration(seconds: 2),
+                        );
+                        _scaffoldKey.currentState.showSnackBar(snack);
+                        return;
+                      }
                       addDo();
                       doController.text = "";
                     },
