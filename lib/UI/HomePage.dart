@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                               ).then((value) => setState(() {}));
                             },
                             onLongPress: () {
-                              showAlertDialog1(context, task);
+                              showAlertDialog1( task);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -167,38 +167,35 @@ Future<void> populateToDoItems()async{
     });
   }
 
-  showAlertDialog1(BuildContext context, Tasks tasks) {
-    Widget okButton = FlatButton(
-      color: Colors.grey[350],
-      height: 27,
-      child: Text("Confirmar"),
-      onPressed: () async {
-        await DBHelper().deleteTasks(tasks.id);
-        setState(() {
-          taskList.remove(tasks);
-        });
-        Navigator.pop(context);
-      },
-    );
-    Widget cancelButton = FlatButton(
-      color: Colors.grey[350],
-      height: 27,
-      child: Text("Cancelar"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-    AlertDialog alerta = AlertDialog(
-      title: Text("Deseja excluir esta lista?"),
-      actions: [
-        okButton,
-        cancelButton,
-      ],
-    );
+  showAlertDialog1(Tasks tasks) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alerta;
+        return AlertDialog(
+          title: Text("Deseja excluir esta lista?"),
+          actions: [
+            FlatButton(
+              color: Colors.grey[350],
+              height: 27,
+              child: Text("Confirmar"),
+              onPressed: () async {
+                await DBHelper().deleteTasks(tasks.id);
+                setState(() {
+                  taskList.remove(tasks);
+                });
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              color: Colors.grey[350],
+              height: 27,
+              child: Text("Cancelar"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
       },
     );
   }
