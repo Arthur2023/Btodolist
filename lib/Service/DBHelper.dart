@@ -76,8 +76,8 @@ class DBHelper {
   Future<int> deleteTasks(int id) async {
     Database dbTasks = await db;
     await dbTasks.delete(taskTable, where: "$idColumn = ?", whereArgs: [id]);
-    return await dbTasks.delete(toDoItemTable, where: "$toDoItemTaskIdColumn = ?", whereArgs: [id]);
-
+    return await dbTasks.delete(toDoItemTable,
+        where: "$toDoItemTaskIdColumn = ?", whereArgs: [id]);
   }
 
   Future<int> updateTasks(Tasks tasks) async {

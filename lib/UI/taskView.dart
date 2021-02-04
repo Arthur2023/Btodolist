@@ -30,6 +30,7 @@ class _TaskPageState extends State<TaskPage> {
     return Dismissible(
       onDismissed: (a) async {
         await DBHelper().deleteToDoItens(widget.task.toDo[index].toDoid);
+        widget.task.toDo.remove(widget.task.toDo[index]);
       },
       key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
       background: Container(

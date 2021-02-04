@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
 
   final taskController = TextEditingController();
 
-  List<Tasks> taskList = [];
+  List<Tasks> taskList = List();
 
   Future<void> _addToDo() async {
     Tasks task1 = Tasks.test(taskController.text);
@@ -152,15 +152,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+Future<void> populateToDoItems()async{
+    for(final element in taskList)
+      element.toDo = await DBHelper().getAllToDoItensFromTasks(element.id);
+    setState(() {});
+}
+
   @override
   void initState() {
     super.initState();
-     DBHelper().getAllTasks().then((value) {
-       taskList = value;
-       taskList.forEach((element) async {
-         element.toDo = await DBHelper().getAllToDoItensFromTasks(element.id);
-       });
-     });
+      DBHelper().getAllTasks().then((list) {
+        taskList = list;
+        populateToDoItems();
+    });
   }
 
   showAlertDialog1(BuildContext context, Tasks tasks) {
