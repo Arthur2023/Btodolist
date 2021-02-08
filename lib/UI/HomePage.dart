@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.green,
         title: Text(
           "Lista de Tarefas",
           style: TextStyle(color: Colors.black, fontSize: 20),
@@ -38,12 +38,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/montain.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color:Colors.black,
         child: RefreshIndicator(
             onRefresh: () async {
               DBHelper().getAllTasks().then((value) {
@@ -70,10 +65,14 @@ class _HomePageState extends State<HomePage> {
                               decoration: InputDecoration(
                                 labelText: "Nova lista",
                                 labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 15),
+                                    color: Colors.grey, fontSize: 15),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                                  hintStyle: TextStyle(color: Colors.white),
+                                disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                                 border: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Colors.black)),
+                                        BorderSide(color: Colors.grey)),
                               ),
                             ),
                           ),
@@ -82,12 +81,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                           RaisedButton(
                               child: Text("Adicionar"),
-                              color: Colors.white,
+                              color: Colors.green,
                               onPressed: () {
                                 if (taskController.text.trim() == "") {
                                   final snack = SnackBar(
                                     content:
-                                        Text("Sua lista precisa de um nome!"),
+                                        Text("Sua lista precisa de um nome!"),  // possivel alteracao
                                     backgroundColor: Colors.grey,
                                     duration: Duration(seconds: 2),
                                   );
@@ -100,7 +99,25 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       for (final task in taskList)
-                        Card(
+                        Container(
+                          height: 85,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[850].withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
                           child: InkWell(
                             onTap: () {
                               Navigator.push(
@@ -123,19 +140,19 @@ class _HomePageState extends State<HomePage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    task.title,
+                                    task.title, style: TextStyle(color:Colors.white)
                                   ),
                                   task.checkItems == task.toDo.length
-                                      ? Icon(Icons.check)
+                                      ? Icon(Icons.check, color: Colors.green)
                                       : CircularProgressIndicator(
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
-                                                  Colors.black),
+                                                  Colors.green),
                                           value: task.toDo.length == 0
                                               ? 0
                                               : task.checkItems /
                                                   task.toDo.length,
-                                          backgroundColor: Colors.grey,
+                                          backgroundColor: Colors.grey[700],
                                           strokeWidth: 2,
                                         ),
                                 ],

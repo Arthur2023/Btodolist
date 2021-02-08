@@ -10,13 +10,13 @@ void main() {
       title: "minimalist to do",
       home: MyApp(),
       theme: ThemeData(
-        hintColor: Colors.black,
-        primaryColor: Colors.black,
+        hintColor: Colors.grey,
+        primaryColor: Colors.grey,
         inputDecorationTheme: InputDecorationTheme(
           enabledBorder:
-              OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           focusedBorder:
-              OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           hintStyle: TextStyle(color: Colors.white),
         ),
       ),

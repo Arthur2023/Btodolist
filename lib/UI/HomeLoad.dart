@@ -39,7 +39,7 @@ Widget _introScreen() {
         gradientBackground: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF4DD0E1), Color(0xFF00BCD4)],
+          colors: [Color(0xFF000000)],
         ),
         navigateAfterSeconds: HomePage(),
       ),
@@ -51,7 +51,7 @@ Widget _introScreen() {
           decoration: BoxDecoration(
             // color: Color(0xFF26C6DA),
             image: DecorationImage(
-              image: AssetImage("images/logo.png"),
+              image: AssetImage("images/hamster.png"),
               fit: BoxFit.cover,
             ),
           ),

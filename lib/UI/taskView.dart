@@ -37,34 +37,61 @@ class _TaskPageState extends State<TaskPage> {
         color: Colors.grey[350],
         child: Align(
           alignment: Alignment(-0.9, 0.0),
-          child: Icon(Icons.delete, color: Colors.white),
+          child: Icon(Icons.delete, color: Colors.black),
         ),
       ),
       direction: DismissDirection.startToEnd,
-      child: Card(
-        child: CheckboxListTile(
-          activeColor: Colors.grey,
-          checkColor: Colors.white,
-          title: Text(
-            widget.task.toDo[index].title,
-            style: TextStyle(color: Colors.black),
+      child: Align(
+        child:
+        Container(
+          height: 80,
+          // width: 65,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey[850].withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
-          value: widget.task.toDo[index].state,
-          secondary: CircleAvatar(
-            child: Icon(
-              widget.task.toDo[index].state ? Icons.check : Icons.error,
-              color: Colors.grey,
+          child: CheckboxListTile(
+            contentPadding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+            activeColor: Colors.green,
+            checkColor: Colors.black,
+            title: Text(
+              widget.task.toDo[index].title,
+              style: TextStyle(color: Colors.white),
             ),
+            value: widget.task.toDo[index].state,
+            secondary: Padding(
+              padding: EdgeInsets.fromLTRB(10, 8, 3, 0),
+              child:
+              CircleAvatar(
+                backgroundColor: Colors.green,
+                child: Icon(
+                  widget.task.toDo[index].state ? Icons.check : Icons.error,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            onChanged: (c) async {
+              setState(() {
+                widget.task.toDo[index].state = c;
+              });
+              await DBHelper()
+                  .updateToDoItens(widget.task.toDo[index], widget.task.id);
+            },
           ),
-          onChanged: (c) async {
-            setState(() {
-              widget.task.toDo[index].state = c;
-            });
-            await DBHelper()
-                .updateToDoItens(widget.task.toDo[index], widget.task.id);
-          },
         ),
-      ),
+      )
     );
   }
 
@@ -74,19 +101,14 @@ class _TaskPageState extends State<TaskPage> {
       key:_scaffoldKey,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.green,
         title: Text(
           widget.task.title,
           style: TextStyle(color: Colors.black),
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/montain.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: Colors.black,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
           child: Column(
@@ -100,9 +122,14 @@ class _TaskPageState extends State<TaskPage> {
                       decoration: InputDecoration(
                         labelText: "Nova tarefa",
                         labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 15),
+                            TextStyle(color: Colors.grey, fontSize: 15),
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        hintStyle: TextStyle(color: Colors.white),
+                        disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                         border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
+                            borderSide: BorderSide(color: Colors.grey)
+                        ),
                       ),
                     ),
                   ),
@@ -110,12 +137,12 @@ class _TaskPageState extends State<TaskPage> {
                     width: 5,
                   ),
                   RaisedButton(
-                    child: Text("Adicionar"),
-                    color: Colors.white,
+                    child: Text("Adicionar", style: TextStyle(color:Colors.black)),
+                    color: Colors.green,
                     onPressed: () {
                       if( doController.text.trim() == ""){
                         final snack = SnackBar(
-                          content: Text("Sua tarefa precisa de um nome!"),
+                          content: Text("Sua tarefa precisa de um nome!",),
                           backgroundColor: Colors.grey,
                           duration: Duration(seconds: 2),
                         );

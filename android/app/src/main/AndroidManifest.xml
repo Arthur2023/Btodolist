@@ -7,8 +7,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="b_to_do"
-        android:icon="@mipmap/ic_launcher">
+        android:label="List Hamster"
+        android:icon="@mipmap/hamster">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
