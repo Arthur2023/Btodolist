@@ -35,11 +35,12 @@ Widget _introScreen() {
   return Stack(
     children: <Widget>[
       SplashScreen(
-        seconds: 3,
+        seconds: 2,
+        loaderColor: Colors.white,
         gradientBackground: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF000000)],
+          colors: [Colors.grey[800],Colors.grey[800]],
         ),
         navigateAfterSeconds: HomePage(),
       ),
@@ -47,11 +48,10 @@ Widget _introScreen() {
         child: Container(
           height: 150,
           width: 150,
-
           decoration: BoxDecoration(
-            // color: Color(0xFF26C6DA),
+            color: Colors.grey[800],
             image: DecorationImage(
-              image: AssetImage("images/hamster.png"),
+              image: AssetImage("images/listview.png"),
               fit: BoxFit.cover,
             ),
           ),

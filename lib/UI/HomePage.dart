@@ -30,15 +30,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.grey[800],
         title: Text(
           "Lista de Tarefas",
-          style: TextStyle(color: Colors.black, fontSize: 20),
+          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         centerTitle: true,
       ),
       body: Container(
-        color:Colors.black,
+        color: Colors.black,
         child: RefreshIndicator(
             onRefresh: () async {
               DBHelper().getAllTasks().then((value) {
@@ -61,101 +61,139 @@ class _HomePageState extends State<HomePage> {
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              style: TextStyle(color:Colors.white, fontSize: 15),
                               controller: taskController,
                               decoration: InputDecoration(
                                 labelText: "Nova lista",
                                 labelStyle: TextStyle(
-                                    color: Colors.grey, fontSize: 15),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                                  hintStyle: TextStyle(color: Colors.white),
-                                disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                                    color: Colors.white, fontSize: 15),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.white)),
+                                hintStyle: TextStyle(color: Colors.white),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.white)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.white)),
                                 border: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Colors.grey)),
+                                        BorderSide(color: Colors.white)),
                               ),
                             ),
                           ),
                           SizedBox(
                             width: 5,
                           ),
-                          RaisedButton(
-                              child: Text("Adicionar"),
-                              color: Colors.green,
-                              onPressed: () {
-                                if (taskController.text.trim() == "") {
-                                  final snack = SnackBar(
-                                    content:
-                                        Text("Sua lista precisa de um nome!"),  // possivel alteracao
-                                    backgroundColor: Colors.grey,
-                                    duration: Duration(seconds: 2),
-                                  );
-                                  _scaffoldKey.currentState.showSnackBar(snack);
-                                  return;
-                                }
-                                _addToDo();
-                                taskController.text = "";
-                              }),
+                          Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[800],
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: RaisedButton(
+                                  child: Text(
+                                    "Adicionar",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  color: Colors.grey[800],
+                                  onPressed: () {
+                                    if (taskController.text.trim() == "") {
+                                      final snack = SnackBar(
+                                        content: Text(
+                                            "Sua lista precisa de um nome!"),
+                                        // possivel alteracao
+                                        backgroundColor: Colors.grey,
+                                        duration: Duration(seconds: 2),
+                                      );
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(snack);
+                                      return;
+                                    }
+                                    _addToDo();
+                                    taskController.text = "";
+                                  })),
                         ],
                       ),
                       for (final task in taskList)
-                        Container(
-                          height: 85,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey[850].withOpacity(0.5),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TaskPage(
-                                    task: task,
-                                  ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 10, 5, 2),
+                          child: Container(
+                            height: 75,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[800],
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[850].withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(
+                                      0, 3), // changes position of shadow
                                 ),
-                              ).then((value) => setState(() {}));
-                            },
-                            onLongPress: () {
-                              showAlertDialog1( task);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    task.title, style: TextStyle(color:Colors.white)
+                              ],
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TaskPage(
+                                      task: task,
+                                    ),
                                   ),
-                                  task.checkItems == task.toDo.length
-                                      ? Icon(Icons.check, color: Colors.green)
-                                      : CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  Colors.green),
-                                          value: task.toDo.length == 0
-                                              ? 0
-                                              : task.checkItems /
-                                                  task.toDo.length,
-                                          backgroundColor: Colors.grey[700],
-                                          strokeWidth: 2,
-                                        ),
-                                ],
+                                ).then((value) => setState(() {}));
+                              },
+                              onLongPress: () {
+                                showAlertDialog1(task);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(task.title,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 18)),
+                                    task.checkItems == task.toDo.length
+                                        ? Icon(Icons.check,
+                                            color: Colors.yellow)
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.yellow[600]),
+                                            value: task.toDo.length == 0
+                                                ? 0
+                                                : task.checkItems /
+                                                    task.toDo.length,
+                                            backgroundColor: Colors.grey[600],
+                                            strokeWidth: 2,
+                                          ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -169,18 +207,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-Future<void> populateToDoItems()async{
-    for(final element in taskList)
+  Future<void> populateToDoItems() async {
+    for (final element in taskList)
       element.toDo = await DBHelper().getAllToDoItensFromTasks(element.id);
     setState(() {});
-}
+  }
 
   @override
   void initState() {
     super.initState();
-      DBHelper().getAllTasks().then((list) {
-        taskList = list;
-        populateToDoItems();
+    DBHelper().getAllTasks().then((list) {
+      taskList = list;
+      populateToDoItems();
     });
   }
 
@@ -192,7 +230,7 @@ Future<void> populateToDoItems()async{
           title: Text("Deseja excluir esta lista?"),
           actions: [
             FlatButton(
-              color: Colors.grey[350],
+              color: Colors.red[800],
               height: 27,
               child: Text("Confirmar"),
               onPressed: () async {
@@ -204,9 +242,12 @@ Future<void> populateToDoItems()async{
               },
             ),
             FlatButton(
-              color: Colors.grey[350],
+              color: Colors.grey[800],
               height: 27,
-              child: Text("Cancelar"),
+              child: Text(
+                "Cancelar",
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
